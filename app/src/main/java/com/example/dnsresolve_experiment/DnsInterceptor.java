@@ -19,23 +19,11 @@ public class DnsInterceptor {
 
     private OkHttpClient client = new OkHttpClient.Builder().dns(this.dnsResolver).build();
 
-    public void makeGetRequest(String urlString) {
+    public void makeGetRequest(String urlString, Callback callback) {
         Request request = new Request.Builder().url(urlString).build();
+
         try {
-            client.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    System.out.println(e.toString());
-                }
-
-                @Override
-                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                    System.out.println("Printing Response");
-                    System.out.println(response.toString());
-                }
-            });
-
-
+            client.newCall(request).enqueue(callback);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
